@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
     <link rel="stylesheet" th:href="@{/css/theme.css}" href="../../static/css/theme.css"/>
 </head>
-<body>
+<body onload="restoreForm()">
 <div>
     <section>
         <h2 th:text="${conference.confName +' (' + #temporals.format(conference.confDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
@@ -177,7 +177,7 @@
                 Preview</a>
             <br/>
             <div>
-                <input type="submit" value="Submit CFP"/>
+                <input type="submit" value="Submit CFP" onclick="storeForm()" />
                 <!--/*/ <th:block th:if="${submission} and !${submission.conference.confStatus.fixedCfp}"> /*/-->
                 <input type="submit" name="draft" value="Save as Draft"/>
                 <input th:if="${submissionId}" type="submit" name="withdraw" value="Withdraw CFP"/>
@@ -188,5 +188,63 @@
         <a th:href="@{/}" href="../index.html" th:text="${@cfpProps.applicationName}">CFP</a>
     </section>
 </div>
+<script>
+var sessionFieldIds = ['title', 'description', 'target', 'category', 'level', 'talkType','language'];
+var speakerFormPrefix = 'speakerForms';
+var speakerFieldIds = ['name', 'github', 'companyOrCommunity', 'bio', 'profileUrl', 'email', 'transportationAllowance1', 'city', 'note'];
+var activitiesMaxCount = 5;
+var speakerActivitiesFieldIds = ['activityType', 'url'];
+
+function storeForm() {
+    for (var index in sessionFieldIds) {
+        var field = document.getElementById(sessionFieldIds[index]);
+        localStorage.setItem(sessionFieldIds[index], field.value);
+    }
+
+    // スピーカーの数を取得します。
+    var speakerCount = (document.getElementsByTagName('table').length - 1)/2;
+    localStorage.setItem('speakerCount', speakerCount);
+
+    for (var i = 0; i<speakerCount; i++) {
+        for (var index in speakerFieldIds) {
+            var field = document.getElementById(speakerFormPrefix + i + '.' +speakerFieldIds[index]);
+            localStorage.setItem(speakerFieldIds[index], field.value);
+        }
+        for (var k=0; k<activitiesMaxCount; k++) {
+            for (var index in speakerActivitiesFieldIds) {
+                var field = document.getElementById(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index]);
+                localStorage.setItem(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index], field.value);
+            }
+        }
+    }
+}
+
+function restoreForm() {
+    for (var index in sessionFieldIds) {
+        var field = document.getElementById(sessionFieldIds[index]);
+        field.value = localStorage.getItem(sessionFieldIds[index]);
+    }
+
+    // スピーカーの数を取得します。
+    var speakerCount = localStorage.getItem('speakerCount');
+
+    for (var i = 0; i<speakerCount; i++) {
+        for (var index in speakerFieldIds) {
+            var field = document.getElementById(speakerFormPrefix + i + '.' + speakerFieldIds[index]);
+            if (speakerFieldIds[index] === 'transportationAllowance1'){
+                field.checked = localStorage.getItem(speakerFieldIds[index]);
+            } else {
+                field.value = localStorage.getItem(speakerFieldIds[index]);
+            }
+        }
+        for (var k=0; k<activitiesMaxCount; k++) {
+            for (var index in speakerActivitiesFieldIds) {
+                var field = document.getElementById(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index]);
+                field.value = localStorage.getItem(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index]);
+            }
+        }
+    }
+}
+</script>
 </body>
 </html>

@@ -222,7 +222,8 @@ function storeForm() {
 function restoreForm() {
     for (var index in sessionFieldIds) {
         var field = document.getElementById(sessionFieldIds[index]);
-        field.value = localStorage.getItem(sessionFieldIds[index]);
+        var cachedValue = localStorage.getItem(sessionFieldIds[index]);
+        if (cachedValue !== null) field.value = cachedValue;
     }
 
     // スピーカーの数を取得します。
@@ -232,15 +233,18 @@ function restoreForm() {
         for (var index in speakerFieldIds) {
             var field = document.getElementById(speakerFormPrefix + i + '.' + speakerFieldIds[index]);
             if (speakerFieldIds[index] === 'transportationAllowance1'){
-                field.checked = localStorage.getItem(speakerFieldIds[index]);
+                var cachedValue = localStorage.getItem(speakerFieldIds[index]);
+                if (cachedValue !== null) field.checked = cachedValue;
             } else {
-                field.value = localStorage.getItem(speakerFieldIds[index]);
+                var cachedValue = localStorage.getItem(speakerFieldIds[index]);
+                if (cachedValue !== null) field.value = cachedValue;
             }
         }
         for (var k=0; k<activitiesMaxCount; k++) {
             for (var index in speakerActivitiesFieldIds) {
                 var field = document.getElementById(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index]);
-                field.value = localStorage.getItem(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index]);
+                var cachedValue = localStorage.getItem(speakerFormPrefix + i + '.activityList' + k + '.' + speakerActivitiesFieldIds[index]);
+                if (cachedValue !== null) field.value = cachedValue;
             }
         }
     }

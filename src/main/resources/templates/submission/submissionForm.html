@@ -188,7 +188,8 @@
         <a th:href="@{/}" href="../index.html" th:text="${@cfpProps.applicationName}">CFP</a>
     </section>
 </div>
-<script>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
 var sessionFieldIds = ['title', 'description', 'target', 'category', 'level', 'talkType','language'];
 var speakerFormPrefix = 'speakerForms';
 var speakerFieldIds = ['name', 'github', 'companyOrCommunity', 'bio', 'profileUrl', 'email', 'transportationAllowance1', 'city', 'note'];
@@ -249,6 +250,7 @@ function restoreForm() {
         }
     }
 }
+/*]]>*/
 </script>
 </body>
 </html>
